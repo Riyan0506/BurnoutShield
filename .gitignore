@@ -1,0 +1,93 @@
+# ==========================
+# Laravel
+# ==========================
+
+/vendor
+/node_modules
+/public/build
+/public/hot
+/public/storage
+
+/storage/*.key
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+
+/bootstrap/cache/*.php
+
+# ==========================
+# Environment
+# ==========================
+
+.env
+.env.backup
+.env.production
+
+# ==========================
+# Machine Learning
+# ==========================
+
+# Model hasil training
+/ml-engine/models/
+
+# Atau jika hanya ingin mengabaikan file model
+*.pkl
+*.joblib
+*.h5
+*.keras
+*.onnx
+*.pt
+*.pth
+
+# Dataset (opsional jika tidak ingin dipublish)
+# /ml-engine/*.csv
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# ==========================
+# IDE
+# ==========================
+
+.vscode/
+.idea/
+.fleet/
+
+# ==========================
+# Logs
+# ==========================
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================
+# OS
+# ==========================
+
+.DS_Store
+Thumbs.db
+
+# ==========================
+# PHPUnit
+# ==========================
+
+.phpunit.cache/
+
+# ==========================
+# Homestead
+# ==========================
+
+Homestead.json
+Homestead.yaml
+auth.json
