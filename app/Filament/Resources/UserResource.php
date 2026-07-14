@@ -56,19 +56,46 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('email')->searchable(),
-                Tables\Columns\TextColumn::make('role')->badge()->color(fn($state) => match($state) {'admin'=>'primary','employee'=>'success',default=>'gray'}),
-                Tables\Columns\IconColumn::make('is_active')->boolean(),
-                Tables\Columns\TextColumn::make('assessments_count')->label('Assessments')
-                    ->counts('assessments')->sortable(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y')->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable()
+                    ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('role')
+                    ->badge()
+                    ->color(fn($state) => match($state) {'admin'=>'primary','employee'=>'success',default=>'gray'})
+                    ->wrap(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('assessments_count')
+                    ->label('Assessments')
+                    ->counts('assessments')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime('d M Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('role')->options(['admin' => 'Admin', 'employee' => 'Employee']),
             ])
-            ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()])
-            ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
+            ->actions([
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])->label('•••'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()
+                ]),
+            ])
+            ->paginationPageOptions([10, 25, 50, 100]);
     }
 
     public static function getRelations(): array

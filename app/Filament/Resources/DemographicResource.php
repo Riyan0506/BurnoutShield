@@ -35,22 +35,63 @@ class DemographicResource extends Resource
                 'Large (500-5000)'=>'Large (500-5000)','MNC (>5000)'=>'MNC (>5000)',
             ]),
             Forms\Components\Select::make('work_mode')->options(['Remote'=>'Remote','Onsite'=>'Onsite','Hybrid'=>'Hybrid']),
-        ])->columns(2);
+        ])->columns([
+            'default' => 1,
+            'sm' => 1,
+            'md' => 2,
+            'lg' => 2,
+            'xl' => 2,
+        ]);
     }
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            Tables\Columns\TextColumn::make('user.name')->label('Employee')->searchable()->sortable(),
-            Tables\Columns\TextColumn::make('age')->sortable(),
-            Tables\Columns\TextColumn::make('gender'),
-            Tables\Columns\TextColumn::make('job_role')->label('Role')->searchable(),
-            Tables\Columns\TextColumn::make('experience_years')->label('Exp (yrs)')->sortable(),
-            Tables\Columns\TextColumn::make('company_size')->label('Company'),
-            Tables\Columns\TextColumn::make('work_mode')->badge()->color(fn($state) => 'info'),
-        ])
-        ->actions([Tables\Actions\EditAction::make()])
-        ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Employee')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap(),
+                Tables\Columns\TextColumn::make('age')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('gender')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('job_role')
+                    ->label('Role')
+                    ->searchable()
+                    ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('experience_years')
+                    ->label('Exp (yrs)')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('company_size')
+                    ->label('Company')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('work_mode')
+                    ->badge()
+                    ->color(fn($state) => 'info')
+                    ->wrap(),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('gender')
+                    ->options(['Male' => 'Male', 'Female' => 'Female', 'Non-binary' => 'Non-binary', 'Prefer not to say' => 'Prefer not to say']),
+                Tables\Filters\SelectFilter::make('work_mode')
+                    ->options(['Remote' => 'Remote', 'Onsite' => 'Onsite', 'Hybrid' => 'Hybrid']),
+            ])
+            ->actions([
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                ])->label('•••'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()
+                ]),
+            ])
+            ->paginationPageOptions([10, 25, 50, 100]);
     }
 
     public static function getRelations(): array { return []; }

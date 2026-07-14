@@ -19,15 +19,21 @@ class Dashboard extends BaseDashboard
     {
         return [
             \App\Filament\Widgets\AdminStatsWidget::class,
-            \App\Filament\Widgets\RiskDistributionWidget::class,
-            \App\Filament\Widgets\ModelPerformanceWidget::class,
+            \App\Filament\Widgets\OverviewChartsWidget::class,
         ];
     }
 
     public function getColumns(): int | string | array
     {
-        return 3;
+        return [
+            'default' => 4,
+            'lg' => 4,
+            'md' => 2,
+            'sm' => 1,
+            'xl' => 4,
+        ];
     }
+
 
     public function getHeaderWidgets(): array
     {

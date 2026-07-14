@@ -41,7 +41,13 @@ class AssessmentResource extends Resource
                 Forms\Components\TextInput::make('stress_level')->numeric()->minValue(1)->maxValue(10)->required(),
                 Forms\Components\TextInput::make('anxiety_score')->numeric()->minValue(1)->maxValue(10)->required(),
                 Forms\Components\TextInput::make('depression_score')->numeric()->minValue(1)->maxValue(10)->required(),
-            ])->columns(3),
+            ])->columns([
+                'default' => 1,
+                'sm' => 1,
+                'md' => 2,
+                'lg' => 3,
+                'xl' => 3,
+            ]),
         ]);
     }
 
@@ -49,17 +55,36 @@ class AssessmentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')->label('Employee')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('work_hours_per_week')->label('Work Hrs')->sortable(),
-                Tables\Columns\TextColumn::make('stress_level')->label('Stress')->sortable(),
-                Tables\Columns\TextColumn::make('anxiety_score')->label('Anxiety')->sortable(),
-                Tables\Columns\TextColumn::make('depression_score')->label('Depression')->sortable(),
-                Tables\Columns\TextColumn::make('prediction.risk_level')->label('Risk')
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Employee')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap(),
+                Tables\Columns\TextColumn::make('work_hours_per_week')
+                    ->label('Work Hrs')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('stress_level')
+                    ->label('Stress')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('anxiety_score')
+                    ->label('Anxiety')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('depression_score')
+                    ->label('Depression')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('prediction.risk_level')
+                    ->label('Risk')
                     ->badge()
                     ->color(fn($state) => match($state) {
                         'High'=>'danger','Moderate'=>'warning','Low'=>'success',default=>'gray'
                     }),
-                Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y')->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime('d M Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at','desc')
             ->filters([
@@ -75,8 +100,18 @@ class AssessmentResource extends Resource
                             }));
                     }),
             ])
-            ->actions([Tables\Actions\ViewAction::make(), Tables\Actions\DeleteAction::make()])
-            ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
+            ->actions([
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])->label('•••'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()
+                ]),
+            ])
+            ->paginationPageOptions([10, 25, 50, 100]);
     }
 
     public static function getRelations(): array { return []; }

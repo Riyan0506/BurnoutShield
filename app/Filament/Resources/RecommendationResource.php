@@ -34,13 +34,30 @@ class RecommendationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')->label('Employee')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('title')->limit(50)->searchable(),
-                Tables\Columns\TextColumn::make('category')->badge()->color(fn($state) => 'info'),
-                Tables\Columns\TextColumn::make('priority')->badge()
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Employee')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap(),
+                Tables\Columns\TextColumn::make('title')
+                    ->limit(50)
+                    ->searchable()
+                    ->wrap(),
+                Tables\Columns\TextColumn::make('category')
+                    ->badge()
+                    ->color(fn($state) => 'info')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('priority')
+                    ->badge()
                     ->color(fn($state) => match($state) {'high'=>'danger','medium'=>'warning','low'=>'success',default=>'gray'}),
-                Tables\Columns\IconColumn::make('is_completed')->boolean()->label('Done'),
-                Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y')->sortable(),
+                Tables\Columns\IconColumn::make('is_completed')
+                    ->boolean()
+                    ->label('Done')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime('d M Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at','desc')
             ->filters([
@@ -49,8 +66,18 @@ class RecommendationResource extends Resource
                 Tables\Filters\SelectFilter::make('priority')
                     ->options(['high'=>'High','medium'=>'Medium','low'=>'Low']),
             ])
-            ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()])
-            ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
+            ->actions([
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])->label('•••'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()
+                ]),
+            ])
+            ->paginationPageOptions([10, 25, 50, 100]);
     }
 
     public static function getRelations(): array { return []; }
